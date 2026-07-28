@@ -1,0 +1,14 @@
+services:
+  app:
+    container_name: nextjs-fintech-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"

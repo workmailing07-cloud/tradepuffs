@@ -1,0 +1,41 @@
+# Antigravity Project Rules - Next.js App
+
+## 🏗️ Senior Level Architecture
+- **200 Lines Limit**: NEVER exceed 200 lines of code per file. If a file grows beyond this, it is a clear signal to refactor. Extract components, hooks, or utility functions.
+- **Organization**: Maintain a strict hierarchy. Logic stays in hooks, types in `.types.ts` files, and UI in the component file.
+- **Scalability**: Build every feature as if it will be used by millions. Ensure modularity and loose coupling.
+- **Maintainability**: Write code that your future self (or a stranger) can understand in 30 seconds.
+
+## 🧼 Clean Code & SOLID Principles
+- **S - Single Responsibility**: Every function, component, and hook must do exactly ONE thing.
+- **O - Open/Closed**: Software entities should be open for extension but closed for modification.
+- **L - Liskov Substitution**: Use interfaces and types precisely to ensure interchangeable components.
+- **I - Interface Segregation**: Don't force components to depend on props they don't use.
+- **D - Dependency Inversion**: Depend on abstractions, not concretions (use dependency injection pattern where applicable).
+- **Early Returns**: Use guard clauses to keep code flat. Avoid deep nesting (`if-else-if`).
+- **Meaningful Naming**: Variables and functions must describe their "intent," not just their "data."
+
+## ⚡ Optimization & Performance
+- **Server Components (RSC)**: Default to Server Components. Hydrate only what is necessary in 'use client'.
+- **Memoization**: Be intentional with `useMemo` and `useCallback`. Don't over-use, but apply to heavy computations or prop stability for stable children.
+- **Lazy Loading**: Use `next/dynamic` for heavy components and image priority/lazy flags appropriately.
+- **Render Cycles**: Minimize state changes. Keep state as close to where it's used as possible.
+
+## 📱 Mobile First UI Principles
+- **Smallest Screen First**: Design layouts starting from mobile (default classes) and scale up using `md:`, `lg:`, etc.
+- **Touch Targets**: All interactive elements must have a minimum touch area of `44x44px` for accessibility.
+- **Fluid Layouts**: Use `flex`, `grid`, and relative units (`%`, `vw`, `vh`, `rem`). Avoid fixed pixel widths for containers.
+- **Responsive Typography**: Ensure text is readable across all devices. Use fluid text sizes if necessary.
+- **Priority Loading**: Display essential information first on mobile screens to minimize scrolling and cognitive load.
+- **Navigation**: Use mobile-friendly patterns like hamburger menus, bottom bars, or gestures.
+
+## 🛠️ Tech Stack & Methodology
+- **Framework**: Next.js 15 (App Router).
+- **Styling**: Tailwind CSS v4 (Strict utility usage).
+- **Type Safety**: TypeScript (Strict mode). No `any`.
+- **Directory Structure**:
+  - `src/app`: Routing and Layouts.
+  - `src/components`: Atomic UI elements (Buttons, Cards, etc.) and complex Features.
+  - `src/hooks`: Feature-specific and global logic.
+  - `src/lib`: Third-party configs and pure utilities.
+  - `src/types`: Global types and interfaces.

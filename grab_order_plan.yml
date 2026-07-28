@@ -1,0 +1,46 @@
+version: "1.0"
+feature_name: "Grab Order (Task Brushing) System"
+description: "Implementation of a task-based earning system where users grab 25 daily orders with periodic 'Combo' orders requiring admin intervention."
+
+development_steps:
+  - step: 1
+    title: "Database Schema Extension"
+    tasks:
+      - "Update User model with dailyTaskCount, maxDailyTasks, and lastGrabDate."
+      - "Create GrabOrder model to track individual order status (Pending, Completed, Combo)."
+      - "Create AdminNotification model for 'Customer Service' requests."
+
+  - step: 2
+    title: "Core Grabbing Logic (Backend)"
+    tasks:
+      - "Create API endpoint for 'Grabbing' an order."
+      - "Implement logic to randomly trigger a 'Combo' order (3-4 times per 25 tasks)."
+      - "Implement validation for account balance vs. order price."
+      - "Create endpoint for 'Completing' a grabbed order (adding profit to balance)."
+
+  - step: 3
+    title: "Integrated Admin Flow (Customer Service)"
+    tasks:
+      - "Create 'CS Requests' table in Admin Dashboard."
+      - "Implement Admin API to allow/authorize a combo order for a specific user."
+      - "Add 'Set Custom Order Amount' functionality for Admins."
+
+  - step: 4
+    title: "Frontend Enhancement (Grab Page)"
+    tasks:
+      - "Connect the spinning wheel to real API calls."
+      - "Implement the 'Combo Order' popup with 'Contact Customer Service' action."
+      - "Show real-time profit and task counter (e.g., 17/25)."
+      - "Add mobile-first responsive adjustments for the wheel and stats."
+
+  - step: 5
+    title: "Security & Validation"
+    tasks:
+      - "Ensure server-side checks for daily limits (no one can grab > 25)."
+      - "Verify transaction integrity (balance cannot go negative without combo intent)."
+      - "Add rate limiting to grab requests."
+
+architecture_rules_compliance:
+  - "Maintain < 200 lines per file (Extract logic to useGrabOrder hook)."
+  - "Use Tailwind v4 for sleek, premium UI as per .antigravity.rules."
+  - "Follow mobile-first principles for the 'Start Boosting' dashboard."

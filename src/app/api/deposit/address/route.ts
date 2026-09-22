@@ -1,43 +1,47 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/mongodb";
-import DepositAddress from "@/lib/models/DepositAddress";
 
-// Returns the active deposit address for the current user.
-// User-specific address takes priority over the global one.
+const CUSTOMER_DEPOSIT_ADDRESS =
+    "TAhBdywfRAbxUjxYNdCEVMb6oyyzcAMiuq";
+
+const CUSTOMER_DEPOSIT_NETWORK =
+    "TRON (TRC-20)";
+
 export async function GET() {
     try {
         const session = await getServerSession(authOptions);
-        if (!session || !(session.user as any).id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        if (!session || !(session.user as any)?.id) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
         }
 
-        await dbConnect();
-        const userId = (session.user as any).id;
+        // Customer-facing deposit address.
+        // Admin-managed DepositAddress records are NOT queried here.
+        return NextResponse.json(
+            {
+                address: CUSTOMER_DEPOSIT_ADDRESS,
+                network: CUSTOMER_DEPOSIT_NETWORK,
+            },
+            {
+                status: 200,
+                headers: {
+                    "Cache-Control":
+                        "no-store, no-cache, must-revalidate, proxy-revalidate",
+                    Pragma: "no-cache",
+                    Expires: "0",
+                },
+            }
+        );
+    } catch (error) {
+        console.error("Customer deposit address error:", error);
 
-        // 1. Look for a user-specific active address first
-        const userAddress = await DepositAddress.findOne({
-            userId,
-            isActive: true,
-        }).sort({ createdAt: -1 });
-
-        if (userAddress) {
-            return NextResponse.json({ address: userAddress.address, network: userAddress.network });
-        }
-
-        // 2. Fall back to global address (userId: null)
-        const globalAddress = await DepositAddress.findOne({
-            userId: null,
-            isActive: true,
-        }).sort({ createdAt: -1 });
-
-        if (!globalAddress) {
-            return NextResponse.json({ address: null, network: "TRON (TRC-20)" });
-        }
-
-        return NextResponse.json({ address: globalAddress.address, network: globalAddress.network });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message || "Server error" }, { status: 500 });
+        return NextResponse.json(
+            { error: "Server error" },
+            { status: 500 }
+        );
     }
 }
